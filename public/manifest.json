@@ -1,0 +1,14 @@
+{
+    "name": "Ticker!",
+    "version": "1.0.0",
+    "author": "Discord: Que?#5327",
+    "icon": "/icon.svg",
+    "manifest_version": 1,
+    "action": {
+      "title": "Ticker!",
+      "icon": "/icon.svg",
+      "popover": "/",
+      "height": 200,
+      "width": 400
+    }
+  }

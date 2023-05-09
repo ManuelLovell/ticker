@@ -1,0 +1,104 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+.material-symbols-outlined {
+	font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 60;
+	font-size: 12px;
+	position: relative;
+	top: 4px;
+}
+
+body {
+	background: #222;
+}
+.main {
+	margin: 0 auto;
+	width: 400px;
+	min-width: 25%;
+	max-width: 95%;
+	max-height: 100vh;
+}
+.button,
+.oneThird {
+	border-radius: 20px;
+	text-transform: uppercase;
+	text-align: center;
+    cursor: pointer;
+}
+
+.button,
+#timerArea {
+	font: 16px/32px Roboto;
+	color: #fff;
+	width: 100%;
+	margin: 10px auto;
+	border: none;
+	display: block;
+}
+.button {
+	background: tomato;
+}
+#timerArea {
+	font: 64px/80px Roboto, sans-serif;
+	text-align: center;
+}
+.hidden {
+	visibility: none;
+}
+.timerButtons,
+.threeButtons {
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	gap: 10px;
+
+	font: 16px Roboto, sans-serif;
+	font-weight: 600;
+	color: #fff;
+	width: 100%;
+}
+
+.oneThird {
+	padding: 8px 0;
+	flex-grow: 1;
+	background: AliceBlue;
+	color: #222;
+}
+
+.button:hover {
+	background: SeaGreen;
+}
+.oneThird:hover {
+	background: DarkSeaGreen;
+}
+.grey,
+.grey:hover {
+	background: #222;
+}
+
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
