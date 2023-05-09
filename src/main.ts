@@ -6,10 +6,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 	<div id="timerArea">0:00</div>
 
 	<div class="threeButtons">
-		<div id="addClassic" class="oneThird">+ 25 mins</div>
 		<div id="addTen" class="oneThird">+ 10 MINS</div>
 		<div id="addFive" class="oneThird">+ 5 MINS</div>
 		<div id="addOne" class="oneThird"> + 1 MINS</div>
+		<div id="addClassic" class="oneThird">+ 10 SECS</div>
 	</div>
     <div class="timerButtons">
 	<div id="startButton" class="button">Start <span class="material-symbols-outlined">
@@ -24,8 +24,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 //basic variables
 let m = 0, // time in minutes
-    s = 0, // seconds counter
-    seconds = 60, // seconds per minute
+    s = 0, // seconds counter\
     duration = 1000, // interval timer 1000 = 1 second
     timeSet = 0, // variable to handle time remaining
     started = false; // check if timer has started
@@ -64,31 +63,42 @@ resetButton.onclick = async function ()
 // adding time to the timer
 addClassic.onclick = async function ()
 {
-    m += 25;
-    timerArea.innerText = `${m}:00`;
+    s += 10;
+    timerArea.innerText = `${m}:${s}`;
 };
 
 addTen.onclick = async function ()
 {
     m += 10;
-    timerArea.innerText = `${m}:00`;
+    timerArea.innerText = `${m}:${s}`;
 };
 
 addFive.onclick = async function ()
 {
     m += 5;
-    timerArea.innerText = `${m}:00`;
+    timerArea.innerText = `${m}:${s}`;
 };
 
 addOne.onclick = async function ()
 {
     m += 1;
-    timerArea.innerText = `${m}:00`;
+    timerArea.innerText = `${m}:${s}`;
 };
 
 startButton.onclick = async function ()
 {
-    timeSet = m * seconds; //set countdown to total seconds
+    if (m === 0 && s > 0)
+    {
+        timeSet = s; //set countdown to total seconds
+    }
+    else if (m > 0 && s === 0)
+    {
+        timeSet = m; //set countdown to total seconds
+    }
+    else
+    {
+        timeSet = (m*60)+s; //set countdown to total seconds
+    }
 
     if (timeSet > 0 && started != true)
     {
@@ -103,7 +113,7 @@ startButton.onclick = async function ()
             if (s <= -1)
             {
                 m--;
-                s = seconds - 1;
+                s = 60 - 1;
             }
             if (s < 10)
             {

@@ -1,5 +1,4 @@
 import path from 'path'
-import inject from "@rollup/plugin-inject";
 
 export default {
     build: {
@@ -10,10 +9,4 @@ export default {
             }
         }
     },
-    plugins: [
-        inject({
-            $: 'jquery',
-            jQuery: 'jquery',
-        }),
-    ],
 }
