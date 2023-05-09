@@ -3,9 +3,18 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: dark;
+  color: var(--foreground-color);
+  background: var(--gradient-color);
+  border:#6b2021;
+  border-radius: 16px;
+  border-style: solid;
+  border-width: 2px;
+
+  --gradient-color: linear-gradient(180deg, #A73335, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
+  --background-color: #000000;
+  --foreground-color: aliceblue;
+  --button-color: #A73335;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,6 +22,17 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+@media (prefers-color-scheme: light)
+{
+    :root{
+        --foreground-color: #4b4848;
+        --background-color: aliceblue;
+        --button-color: #d49d9d;
+        --gradient-color: linear-gradient(180deg, #A73335, rgb(255, 255, 255), rgba(255, 255, 255, 0.952));
+    }
+}
+
 .material-symbols-outlined {
 	font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 60;
 	font-size: 12px;
@@ -21,7 +41,7 @@
 }
 
 body {
-	background: #222;
+	background: var(--background-color);
 }
 .main {
 	margin: 0 auto;
@@ -41,14 +61,14 @@ body {
 .button,
 #timerArea {
 	font: 16px/32px Roboto;
-	color: #fff;
+    color: var(--foreground-color);
 	width: 100%;
 	margin: 10px auto;
 	border: none;
 	display: block;
 }
 .button {
-	background: tomato;
+	background: var(--button-color);
 }
 #timerArea {
 	font: 64px/80px Roboto, sans-serif;
@@ -66,15 +86,15 @@ body {
 
 	font: 16px Roboto, sans-serif;
 	font-weight: 600;
-	color: #fff;
+    color: var(--foreground-color);
 	width: 100%;
 }
 
 .oneThird {
 	padding: 8px 0;
 	flex-grow: 1;
-	background: AliceBlue;
-	color: #222;
+	background: var(--foreground-color);
+	color: var(--background-color);
 }
 
 .button:hover {
@@ -86,19 +106,5 @@ body {
 .grey,
 .grey:hover {
 	background: #222;
-}
-
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 

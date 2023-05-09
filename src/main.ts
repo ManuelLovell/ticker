@@ -1,3 +1,5 @@
+import OBR from '@owlbear-rodeo/sdk';
+import * as Utilities from './utilities';
 import './style.css'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
@@ -21,6 +23,16 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     </div>
 </div>
 `
+await OBR.onReady(async () =>
+
+{    // Set theme accordingly
+    const theme = await OBR.theme.getTheme();
+    Utilities.SetThemeMode(theme, document);
+    OBR.theme.onChange((theme) =>
+    {
+        Utilities.SetThemeMode(theme, document);
+    })
+});
 
 //basic variables
 let m = 0, // time in minutes
