@@ -1,6 +1,7 @@
 import path from 'path'
 
 export default {
+    base: "./",
     build: {
         target: 'esnext',
         rollupOptions: {
