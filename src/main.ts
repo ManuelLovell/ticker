@@ -18,6 +18,17 @@ await OBR.onReady(async () =>
         Utilities.SetThemeMode(theme, document);
     })
 
+    // Reset the badge if the window is open
+    OBR.action.onOpenChange(async (open) =>
+    {
+        if (open)
+        {
+            await OBR.action.setBadgeText(undefined);
+            await OBR.action.setBadgeBackgroundColor("#BB99FF");
+            await OBR.action.setIcon("/icon.svg");
+        }
+    });
+
     // Get role
     const role = await OBR.player.getRole();
     if (role === "GM")
@@ -36,7 +47,7 @@ function SetupPlayerView(): void
     let targetTimeString: string;
     let timerInterval: number;
 
-    OBR.scene.onMetadataChange((metadata) =>
+    OBR.scene.onMetadataChange(async (metadata) =>
     {
         const meta = metadata[`${Constants.EXTENSIONID}/metadata_timeritem`] as any;
         const timeData = meta?.TimeBomb as ITimeBomb;
@@ -63,7 +74,7 @@ function SetupPlayerView(): void
 
             const timerArea = document.getElementById("timerNumbers")!;
             //Set Timer Numbers
-            timerInterval = setInterval(function ()
+            timerInterval = setInterval(async function ()
             {
                 let minutes = Math.floor(durationSeconds / 60);
                 let seconds = durationSeconds - minutes * 60;
@@ -90,6 +101,17 @@ function SetupPlayerView(): void
                     timerArea.innerText = "Ding!";
                     //snd.play();  Can't play unless they interact with panel
                 }
+
+                // Update badge if multiple of 5 or if Time is up
+                if (durationSeconds % 5 === 0 && timerArea.innerText !== "Ding!")
+                {
+                    await SetTimerOBRBadge(timerArea.innerText);
+                }
+                else if (timerArea.innerText === "Ding!")
+                {
+                    await AlarmOBRBadge();
+                }
+
             }, timerDuration);
         }
 
@@ -101,6 +123,7 @@ function SetupPlayerView(): void
                 <div class="container-glass">
                 </div>`;
             clearInterval(timerInterval);
+            await SetTimerOBRBadge("Paused..");
         }
 
         if (timeData.reset == true && targetTimeString !== undefined)
@@ -110,6 +133,7 @@ function SetupPlayerView(): void
                 <div class="container-glass">
                 </div>`;
             clearInterval(timerInterval);
+            await ClearOBRBadge();
         }
     });
 
@@ -256,6 +280,7 @@ function SetupGMView()
         let timerMeta: Metadata = {};
         timerMeta[`${Constants.EXTENSIONID}/metadata_timeritem`] = { TimeBomb };
         await OBR.scene.setMetadata(timerMeta);
+        await ClearOBRBadge();
     };
 
     // adding time to the timer
@@ -357,7 +382,7 @@ function SetupGMView()
             stopButton.hidden = false;
             startButton.hidden = true;
             resetButton.hidden = true;
-            let x = setInterval(function ()
+            let x = setInterval(async function ()
             {
                 timeSet--;
                 s--;
@@ -391,6 +416,7 @@ function SetupGMView()
                     let timerMeta: Metadata = {};
                     timerMeta[`${Constants.EXTENSIONID}/metadata_timeritem`] = { TimeBomb };
                     await OBR.scene.setMetadata(timerMeta);
+                    await SetTimerOBRBadge("Paused..");
                 };
 
                 if (timeSet <= 0)
@@ -403,6 +429,16 @@ function SetupGMView()
                     stopButton.hidden = true;
                     resetButton.hidden = false;
                     snd.play();
+                }
+
+                // Update badge if multiple of 5 or if Time is up
+                if (timeSet % 5 === 0 && timerArea.innerText !== "Ding!")
+                {
+                    await SetTimerOBRBadge(timerArea.innerText);
+                }
+                else if (timerArea.innerText === "Ding!")
+                {
+                    await AlarmOBRBadge();
                 }
             }, duration);
 
@@ -427,6 +463,33 @@ function SetupGMView()
         let timerMeta: Metadata = {};
         timerMeta[`${Constants.EXTENSIONID}/metadata_timeritem`] = { TimeBomb };
         await OBR.scene.setMetadata(timerMeta);
+    }
+}
+
+async function ClearOBRBadge()
+{
+    await OBR.action.setBadgeText(undefined);
+    await OBR.action.setBadgeBackgroundColor("#BB99FF");
+}
+
+async function SetTimerOBRBadge(text: string)
+{
+    const isOpen = await OBR.action.isOpen();
+    if (!isOpen)
+    {
+        await OBR.action.setBadgeText(text);
+        await OBR.action.setBadgeBackgroundColor("yellow");
+    }
+
+}
+
+async function AlarmOBRBadge()
+{
+    const isOpen = await OBR.action.isOpen();
+    if (!isOpen)
+    {
+        await OBR.action.setBadgeText("Time's Up!");
+        await OBR.action.setBadgeBackgroundColor("red");
     }
 }
 
