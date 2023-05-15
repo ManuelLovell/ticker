@@ -4,6 +4,7 @@ import './style.css'
 import { Constants } from './constants';
 import { ITimeBomb } from './interfaces';
 
+let sceneReady = false;
 // Base loading until OBR is ready
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class=main><div id="timerArea">Loading..</div></div>`;
@@ -12,6 +13,8 @@ await OBR.onReady(async () =>
 {
     // Set theme accordingly
     const theme = await OBR.theme.getTheme();
+    sceneReady = await OBR.scene.isReady();
+
     Utilities.SetThemeMode(theme, document);
     OBR.theme.onChange((theme) =>
     {
@@ -33,7 +36,28 @@ await OBR.onReady(async () =>
     const role = await OBR.player.getRole();
     if (role === "GM")
     {
-        SetupGMView();
+        if (sceneReady)
+        {
+            SetupGMView();
+        }
+        else
+        {
+            document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+            <div class=main><div id="timerArea" class="disabled">Disabled until Scene Ready..</div></div>`;
+        }
+
+        OBR.scene.onReadyChange((ready) =>
+        {
+            if (ready)
+            {
+                SetupGMView();
+            }
+            else
+            {
+                document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+                <div class=main><div id="timerArea" class="disabled">Disabled until Scene Ready..</div></div>`;
+            }
+        });
     }
     else
     {
@@ -227,11 +251,11 @@ function SetupGMView()
             <div id="addClassic" class="oneThird">+ 10S</div>
         </div>
         <div class="timerButtons">
-        <div id="startButton" class="button"><span class="emoji">Start </span><span class="material-symbols-outlined">
+        <div id="startButton" class="button">Start <span class="material-symbols-outlined">
             </span></div>
-        <div id="stopButton" class="button"><span class="emoji">Pause </span><span class="material-symbols-outlined">
+        <div id="stopButton" class="button">Pause <span class="material-symbols-outlined">
             </span></div>
-        <div id="resetButton" class="button"><span class="emoji">Reset </span><span class="material-symbols-outlined">
+        <div id="resetButton" class="button">Reset <span class="material-symbols-outlined">
             </span></div>
         </div>
     </div>

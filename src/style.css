@@ -60,7 +60,7 @@ body {
 }
 
 .button,
-#timerArea {
+#timerArea:not(.disabled) {
     font: 16px/32px Roboto;
     color: var(--foreground-color);
     width: 100%;
@@ -75,8 +75,15 @@ body {
     border-style: solid;
 }
 
-#timerArea {
+#timerArea:not(.disabled) {
     font: 64px/80px Roboto, sans-serif;
+    text-align: center;
+}
+
+.disabled
+{
+    font: 32px/80px Roboto, sans-serif;
+    height:180px;
     text-align: center;
 }
 
