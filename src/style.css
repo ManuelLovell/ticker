@@ -3,6 +3,9 @@
     line-height: 1.5;
     font-weight: 400;
 
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+
     color-scheme: dark;
     color: var(--foreground-color);
     background: var(--gradient-color);
@@ -52,7 +55,8 @@ body {
 }
 
 .button,
-.oneThird {
+.oneThird,
+.oneFourth {
     border-radius: 20px;
     text-transform: uppercase;
     text-align: center;
@@ -64,7 +68,7 @@ body {
     font: 16px/32px Roboto;
     color: var(--foreground-color);
     width: 100%;
-    margin: 10px auto;
+    margin: 1px auto;
     border: none;
     display: block;
 }
@@ -105,9 +109,17 @@ body {
 }
 
 .oneThird {
-    padding: 6px 0;
+    padding: 5px 0;
+    margin: 1px;
     flex-grow: 1;
     background: var(--foreground-color);
+    color: var(--background-color);
+}
+.oneFourth{
+    padding: 5px 0;
+    margin: 1px;
+    flex-grow: 1;
+    background: var(--button-color);
     color: var(--background-color);
 }
 
@@ -116,7 +128,11 @@ body {
 }
 
 .oneThird:hover {
-    background: DarkSeaGreen;
+    background: rgb(188, 143, 143);
+}
+
+.oneFourth:hover {
+    background: rgb(100, 44, 44);
 }
 
 .grey,

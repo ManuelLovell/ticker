@@ -243,12 +243,17 @@ function SetupGMView()
     <div class=main>
     
         <div id="timerArea">0:00</div>
-    
         <div class="threeButtons">
             <div id="addTen" class="oneThird">+ 10M</div>
             <div id="addFive" class="oneThird">+ 5M</div>
             <div id="addOne" class="oneThird"> + 1M</div>
             <div id="addClassic" class="oneThird">+ 10S</div>
+        </div>
+        <div class="threeButtons minus">
+            <div id="dropTen" class="oneFourth">- 10M</div>
+            <div id="dropFive" class="oneFourth">- 5M</div>
+            <div id="dropOne" class="oneFourth"> - 1M</div>
+            <div id="dropClassic" class="oneFourth">- 10S</div>
         </div>
         <div class="timerButtons">
         <div id="startButton" class="button">Start <span class="material-symbols-outlined">
@@ -276,6 +281,11 @@ function SetupGMView()
     const addOne = document.getElementById("addOne")!;
     const addFive = document.getElementById("addFive")!;
     const addTen = document.getElementById("addTen")!;
+    
+    const dropClassic = document.getElementById("dropClassic")!;
+    const dropOne = document.getElementById("dropOne")!;
+    const dropFive = document.getElementById("dropFive")!;
+    const dropTen = document.getElementById("dropTen")!;
 
     const timerArea = document.getElementById("timerArea")!;
     const threeButtons = <HTMLElement>document.querySelector(".threeButtons")!;
@@ -330,6 +340,30 @@ function SetupGMView()
             timerArea.innerText = `${m}:${s}`;
         }
     };
+    dropClassic.onclick = async function ()
+    {
+        if (s < 11 && m == 0) return;
+
+        s -= 10;
+        if (started)
+        {
+            timeSet -= 10;
+            await SendTime();
+        }
+        if (s <= 0)
+        {
+            s = s + 60;
+            m -= 1;
+        }
+        if (s == 0 || s < 10)
+        {
+            timerArea.innerText = `${m}:0${s}`;
+        }
+        else
+        {
+            timerArea.innerText = `${m}:${s}`;
+        }
+    };
 
     addTen.onclick = async function ()
     {
@@ -337,6 +371,24 @@ function SetupGMView()
         if (started)
         {
             timeSet += 10 * 60;
+            await SendTime();
+        }
+        if (s == 0)
+        {
+            timerArea.innerText = `${m}:0${s}`;
+        }
+        else
+        {
+            timerArea.innerText = `${m}:${s}`;
+        }
+    };
+    dropTen.onclick = async function ()
+    {
+        if (m < 10) return;
+        m -= 10;
+        if (started)
+        {
+            timeSet -= 10 * 60;
             await SendTime();
         }
         if (s == 0)
@@ -366,6 +418,25 @@ function SetupGMView()
             timerArea.innerText = `${m}:${s}`;
         }
     };
+    dropFive.onclick = async function ()
+    {
+        if (m < 5) return;
+
+        m -= 5;
+        if (started)
+        {
+            timeSet -= 5 * 60;
+            await SendTime();
+        }
+        if (s == 0)
+        {
+            timerArea.innerText = `${m}:0${s}`;
+        }
+        else
+        {
+            timerArea.innerText = `${m}:${s}`;
+        }
+    };
 
     addOne.onclick = async function ()
     {
@@ -373,6 +444,25 @@ function SetupGMView()
         if (started)
         {
             timeSet += 1 * 60;
+            await SendTime();
+        }
+        if (s == 0)
+        {
+            timerArea.innerText = `${m}:0${s}`;
+        }
+        else
+        {
+            timerArea.innerText = `${m}:${s}`;
+        }
+    };
+    dropOne.onclick = async function ()
+    {
+        if (m < 1) return;
+
+        m -= 1;
+        if (started)
+        {
+            timeSet -= 1 * 60;
             await SendTime();
         }
         if (s == 0)
