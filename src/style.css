@@ -3,21 +3,32 @@
     line-height: 1.5;
     font-weight: 400;
 
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+    overflow-y: hidden;
+    /* Hide vertical scrollbar */
+    overflow-x: hidden;
+    /* Hide horizontal scrollbar */
 
-    color-scheme: dark;
+    color-scheme: inherit;
     color: var(--foreground-color);
-    background: var(--gradient-color);
-    border: #6b2021;
+    border: var(--OBR-dark-blue-trans);
     border-radius: 16px;
     border-style: solid;
     border-width: 2px;
 
-    --gradient-color: linear-gradient(180deg, #A73335, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
     --background-color: #242424;
-    --foreground-color: aliceblue;
-    --button-color: #A73335;
+    --foreground-color: white;
+    --soft-outline: rgb(65, 65, 65);
+    --invert: none;
+    --tooltip-background: none;
+
+    --OBR-offset-fore: rgb(230, 230, 238);
+    --OBR-offset-back: rgb(49, 49, 65);
+    --OBR-dark-blue: rgb(30, 34, 49);
+    --OBR-dark-blue-trans: rgba(30, 34, 49, 0.507);
+    --OBR-light-blue: rgb(60, 62, 75);
+
+    --dice-color: #159cc5;
+    --BS-red: #A73335;
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -28,10 +39,21 @@
 
 @media (prefers-color-scheme: light) {
     :root {
-        --foreground-color: #4b4848;
-        --background-color: aliceblue;
-        --button-color: #d49d9d;
-        --gradient-color: linear-gradient(180deg, #A73335, rgb(255, 255, 255), rgba(255, 255, 255, 0.952));
+        --invert: brightness(75%);
+        --invert-click: none;
+        --background-color: #e9e9e9;
+        --foreground-color: rgb(49, 49, 49);
+        --soft-outline: rgb(196, 196, 196);
+        --invert: invert(.65);
+        --invert-click: none;
+        --tooltip-background: rgb(161, 161, 161);
+        --OBR-offset-fore: rgb(44, 44, 46);
+        --OBR-offset-back: rgb(210, 210, 223);
+        --OBR-dark-blue: rgb(209, 210, 217);
+        --OBR-light-blue: rgb(231, 233, 238);
+        --OBR-dark-blue-trans: rgba(255, 255, 255, 0.507);
+        --dice-color: #56bad8;
+        --BS-red: #e07f80;
     }
 }
 
@@ -40,10 +62,6 @@
     font-size: 12px;
     position: relative;
     top: 4px;
-}
-
-body {
-    background: var(--background-color);
 }
 
 .main {
@@ -68,26 +86,25 @@ body {
     font: 16px/32px Roboto;
     color: var(--foreground-color);
     width: 100%;
-    margin: 1px auto;
     border: none;
     display: block;
 }
 
 .button {
     border-color: var(--button-color);
-    border-width: 2px;
+    border-width: 1px;
     border-style: solid;
+    margin-top: 2px;
+    background: var(--OBR-dark-blue-trans);
 }
 
 #timerArea:not(.disabled) {
     font: 64px/80px Roboto, sans-serif;
-    text-align: center;
 }
 
-.disabled
-{
+.disabled {
     font: 32px/80px Roboto, sans-serif;
-    height:180px;
+    height: 180px;
     text-align: center;
 }
 
@@ -100,6 +117,7 @@ body {
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    padding-top: 1px;
     gap: 10px;
 
     font: 16px Roboto, sans-serif;
@@ -112,27 +130,34 @@ body {
     padding: 5px 0;
     margin: 1px;
     flex-grow: 1;
-    background: var(--foreground-color);
-    color: var(--background-color);
+    color: var(--foreground-color);
+    background: var(--OBR-light-blue);
+    border-style: solid;
+    border-color: grey;
+    border-width: 1px;
 }
-.oneFourth{
+
+.oneFourth {
     padding: 5px 0;
     margin: 1px;
     flex-grow: 1;
-    background: var(--button-color);
-    color: var(--background-color);
+    color: var(--foreground-color);
+    background: var(--OBR-dark-blue);
+    border-style: solid;
+    border-color: grey;
+    border-width: 1px;
 }
 
 .button:hover {
-    background: SeaGreen;
+    background: var(--dice-color);
 }
 
 .oneThird:hover {
-    background: rgb(188, 143, 143);
+    background: var(--OBR-dark-blue-trans);
 }
 
 .oneFourth:hover {
-    background: rgb(100, 44, 44);
+    background: var(--OBR-dark-blue-trans);
 }
 
 .grey,
@@ -167,7 +192,12 @@ body {
 .txt-center {
     text-align: center;
 }
-
+.floatRight
+{
+    float:right;
+    text-align: right;
+    justify-content:right;
+}
 .timerNumbers {
     float: right;
     text-align: center;
@@ -178,7 +208,19 @@ body {
     font-weight: bolder;
     line-height: 85vh;
 }
+.timerHidden
+{
+    float: right;
+    text-align: center;
+    top: 50%;
+    width: 100%;
 
+    font: 24px Roboto, sans-serif;
+    font-weight: bolder;
+    line-height: 85vh;
+
+    animation: blinker 3s linear infinite;
+}
 .timerPaused {
     float: right;
     text-align: center;
@@ -191,8 +233,69 @@ body {
 
     animation: blinker 1s linear infinite;
 }
+
 @keyframes blinker {
     50% {
-      opacity: 0;
+        opacity: 0;
     }
+}
+/** Toggle Switch **/
+#topMost
+{
+    display: flex;
+}
+#slideToggle
+{
+    line-height: 35px;
+}
+.toggle {
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  .toggle-switch {
+    display: inline-block;
+    background: #ccc;
+    border-radius: 16px;
+    width: 58px;
+    height: 32px;
+    position: relative;
+    vertical-align: middle;
+    transition: background 0.25s;
+  }
+  .toggle-switch:before, .toggle-switch:after {
+    content: "";
+  }
+  .toggle-switch:before {
+    display: block;
+    background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    transition: left 0.25s;
+  }
+  .toggle:hover .toggle-switch:before {
+    background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+  .toggle-checkbox:checked + .toggle-switch {
+    background: var(--dice-color);
+  }
+  .toggle-checkbox:checked + .toggle-switch:before {
+    left: 30px;
+  }
+  
+  .toggle-checkbox {
+    position: absolute;
+    visibility: hidden;
+  }
+  
+  .toggle-label {
+    margin-left: 5px;
+    position: relative;
+    top: 2px;
   }

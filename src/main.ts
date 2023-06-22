@@ -5,6 +5,7 @@ import { Constants } from './constants';
 import { ITimeBomb } from './interfaces';
 
 let sceneReady = false;
+let currentTheme: "LIGHT" | "DARK";
 // Base loading until OBR is ready
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class=main><div id="timerArea">Loading..</div></div>`;
@@ -13,11 +14,13 @@ await OBR.onReady(async () =>
 {
     // Set theme accordingly
     const theme = await OBR.theme.getTheme();
+    currentTheme = theme.mode;
     sceneReady = await OBR.scene.isReady();
 
     Utilities.SetThemeMode(theme, document);
     OBR.theme.onChange((theme) =>
     {
+        currentTheme = theme.mode;
         Utilities.SetThemeMode(theme, document);
     })
 
@@ -70,6 +73,11 @@ function SetupPlayerView(): void
     const timerDuration = 1000;
     let targetTimeString: string;
     let timerInterval: number;
+    document.querySelector<HTMLDivElement>('#app')!.innerHTML =
+    `<div id="activeTimer"></div>
+    <div id="inactiveTimer" class="timerHidden"></div>`
+    const activeArea = document.getElementById("activeTimer")!;
+    const inactiveArea = document.getElementById("inactiveTimer")!;
 
     OBR.scene.onMetadataChange(async (metadata) =>
     {
@@ -77,6 +85,17 @@ function SetupPlayerView(): void
         const timeData = meta?.TimeBomb as ITimeBomb;
 
         if (!timeData) return;
+
+        if (timeData.visible === false)
+        {
+            activeArea.hidden = true;
+            inactiveArea.innerHTML = `Time is running out..`;
+        }
+        if (timeData.visible === true)
+        {
+            inactiveArea.innerHTML = ``;
+            activeArea.hidden = false;
+        }
 
         // Find new timers and start the countdown.
         if (timeData.zuluTargetTime != targetTimeString && timeData.start === true)
@@ -94,7 +113,7 @@ function SetupPlayerView(): void
             let durationSeconds = Math.round(targetDuration / 1000);
 
             //Create Hourglass
-            document.querySelector<HTMLDivElement>('#app')!.innerHTML = CreateHourglass(durationSeconds + "s");
+            activeArea.innerHTML = CreateHourglass(durationSeconds + "s");
 
             const timerArea = document.getElementById("timerNumbers")!;
             //Set Timer Numbers
@@ -129,7 +148,7 @@ function SetupPlayerView(): void
                 // Update badge if multiple of 5 or if Time is up
                 if (durationSeconds % 5 === 0 && timerArea.innerText !== "Ding!")
                 {
-                    await SetTimerOBRBadge(timerArea.innerText);
+                    activeArea.hidden === false? await SetTimerOBRBadge(timerArea.innerText) : await SetTimerOBRBadge("Tick tock..");
                 }
                 else if (timerArea.innerText === "Ding!")
                 {
@@ -142,7 +161,7 @@ function SetupPlayerView(): void
         if (timeData.start == false && timeData.reset == false && targetTimeString !== undefined)
         {
             const timeLeft = document.getElementById("timerNumbers")!.innerText;
-            document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+            activeArea.innerHTML = `
                 <div class="timerPaused">⏳ ${timeLeft} ⌛</div>
                 <div class="container-glass">
                 </div>`;
@@ -152,7 +171,7 @@ function SetupPlayerView(): void
 
         if (timeData.reset == true && targetTimeString !== undefined)
         {
-            document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+            activeArea.innerHTML = `
                 <div class="timerNumbers">⏳...</div>
                 <div class="container-glass">
                 </div>`;
@@ -161,14 +180,13 @@ function SetupPlayerView(): void
         }
     });
 
-    document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+    activeArea.innerHTML = `
     <div class="timerNumbers">⏳...</div>
     <div class="container-glass">
     </div>`;
 
 }
 
-//return `<div class="timerNumbers" id="timerNumbers">0:00</div>
 function CreateHourglass(duration: string): string
 {
     return `<div class="timerNumbers" id="timerNumbers">0:00</div>
@@ -241,8 +259,16 @@ function SetupGMView()
 {
     document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div class=main>
-    
-        <div id="timerArea">0:00</div>
+        <div id="topMost">
+        <div id="slideToggle">
+        <label class="toggle">
+        <span id="visibleLabel" class="toggle-label">Visible</span>
+        <input id="visibleToggle" class="toggle-checkbox" type="checkbox" checked>
+        <div class="toggle-switch"></div>
+        </label>
+        </div>
+        <div id="timerArea" class="floatRight">0:00</div>
+        </div>
         <div class="threeButtons">
             <div id="addTen" class="oneThird">+ 10M</div>
             <div id="addFive" class="oneThird">+ 5M</div>
@@ -277,11 +303,15 @@ function SetupGMView()
     const resetButton = <HTMLInputElement>document.getElementById("resetButton")!;
     const startButton = <HTMLInputElement>document.getElementById("startButton")!;
 
+    const visibleToggle = <HTMLInputElement>document.getElementById("visibleToggle")!;
+    const visibleLabel = <HTMLLabelElement>document.getElementById("visibleLabel")!;
+    let visible = visibleToggle.checked;
+
     const addClassic = document.getElementById("addClassic")!;
     const addOne = document.getElementById("addOne")!;
     const addFive = document.getElementById("addFive")!;
     const addTen = document.getElementById("addTen")!;
-    
+
     const dropClassic = document.getElementById("dropClassic")!;
     const dropOne = document.getElementById("dropOne")!;
     const dropFive = document.getElementById("dropFive")!;
@@ -291,6 +321,19 @@ function SetupGMView()
     const threeButtons = <HTMLElement>document.querySelector(".threeButtons")!;
 
     stopButton.hidden = true;
+
+    visibleToggle.onchange = async function ()
+    {
+        visible = visibleToggle.checked;
+        visibleLabel.innerText = visible ? "Visible" : "Hidden";
+
+        // Send to OBR to sync player timers
+        let TimeBomb: ITimeBomb = { visible: visible };
+
+        let timerMeta: Metadata = {};
+        timerMeta[`${Constants.EXTENSIONID}/metadata_timeritem`] = { TimeBomb };
+        await OBR.scene.setMetadata(timerMeta);
+    };
 
     // resets the timer to 0, removes the formatting and reinstates the hidden buttons
     resetButton.onclick = async function ()
@@ -308,7 +351,8 @@ function SetupGMView()
         // Send to OBR to sync player timers
         let TimeBomb: ITimeBomb = {
             reset: true,
-            start: false
+            start: false,
+            visible: visible
         };
 
         let timerMeta: Metadata = {};
@@ -524,7 +568,8 @@ function SetupGMView()
                     // Send to OBR to sync player timers
                     let TimeBomb: ITimeBomb = {
                         start: false,
-                        reset: false
+                        reset: false,
+                        visible: visible
                     };
 
                     let timerMeta: Metadata = {};
@@ -571,7 +616,8 @@ function SetupGMView()
         let TimeBomb: ITimeBomb = {
             zuluTargetTime: zuluTargetTime,
             start: true,
-            reset: false
+            reset: false,
+            visible: visible
         };
 
         let timerMeta: Metadata = {};
@@ -592,7 +638,8 @@ async function SetTimerOBRBadge(text: string)
     if (!isOpen)
     {
         await OBR.action.setBadgeText(text);
-        await OBR.action.setBadgeBackgroundColor("yellow");
+        const badgeColor = currentTheme == "DARK" ? "yellow" : "#159cc5";
+        await OBR.action.setBadgeBackgroundColor(badgeColor);
     }
 
 }

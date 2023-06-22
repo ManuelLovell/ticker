@@ -1,6 +1,6 @@
 ---
 title: Ticker!
-description: Timer
+description: A simple timer configured by the GM that is synchronized to player's in the room.
 author: Battle-System
 image: https://battle-system.com/owlbear/ticker-docs/baseView.png
 icon: https://battle-system.com/owlbear/ticker-docs/logo.png
