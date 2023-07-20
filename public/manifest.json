@@ -1,6 +1,7 @@
 {
     "name": "Ticker!",
-    "version": "1.0.0",
+    "description": "A simple timer configured by the GM that is synchronized to player's in the room",
+    "version": "1.0.1",
     "author": "Battle-System",
     "icon": "/logo.png",
     "manifest_version": 1,
