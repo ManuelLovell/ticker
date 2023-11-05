@@ -71,7 +71,7 @@ await OBR.onReady(async () =>
 function SetupPlayerView(): void
 {
     const timerDuration = 1000;
-    let targetTimeString: string;
+    let targetEndTime: string;
     let timerInterval: number;
     document.querySelector<HTMLDivElement>('#app')!.innerHTML =
     `<div id="activeTimer"></div>
@@ -98,14 +98,14 @@ function SetupPlayerView(): void
         }
 
         // Find new timers and start the countdown.
-        if (timeData.zuluTargetTime != targetTimeString && timeData.start === true)
+        if (timeData.startTime && timeData.endTime && timeData.endTime != targetEndTime && timeData.start === true)
         {
-            const currentTime = new Date(Date.now());
-            targetTimeString = timeData.zuluTargetTime!;
+            targetEndTime = timeData.endTime;
 
-            const targetTimeDate = new Date(targetTimeString);
+            const start = new Date(timeData.startTime);
+            const end = new Date(timeData.endTime);
 
-            let targetDuration = targetTimeDate.getTime() - currentTime.getTime();
+            let targetDuration = end.getTime() - start.getTime();
 
             // If this is old or negative, get out
             if (targetDuration < 3) return;
@@ -158,7 +158,7 @@ function SetupPlayerView(): void
             }, timerDuration);
         }
 
-        if (timeData.start == false && timeData.reset == false && targetTimeString !== undefined)
+        if (timeData.start == false && timeData.reset == false && targetEndTime !== undefined)
         {
             const timeLeft = document.getElementById("timerNumbers")!.innerText;
             activeArea.innerHTML = `
@@ -169,7 +169,7 @@ function SetupPlayerView(): void
             await SetTimerOBRBadge("Paused..");
         }
 
-        if (timeData.reset == true && targetTimeString !== undefined)
+        if (timeData.reset == true && targetEndTime !== undefined)
         {
             activeArea.innerHTML = `
                 <div class="timerNumbers">⏳...</div>
@@ -297,7 +297,8 @@ function SetupGMView()
         duration = 1000, // interval timer 1000 = 1 second
         timeSet = 0, // variable to handle time remaining
         started = false, // check if timer has started
-        zuluTargetTime;
+        zuluStartTime,
+        zuluEndTime;
 
     const stopButton = <HTMLInputElement>document.getElementById("stopButton")!;
     const resetButton = <HTMLInputElement>document.getElementById("resetButton")!;
@@ -598,6 +599,10 @@ function SetupGMView()
                 else if (timerArea.innerText === "Ding!")
                 {
                     await AlarmOBRBadge();
+                    setTimeout(() =>
+                    {
+                        resetButton.click();
+                    }, 2000); // 10000 milliseconds = 10 seconds
                 }
             }, duration);
 
@@ -609,12 +614,17 @@ function SetupGMView()
 
     async function SendTime()
     {
-        // Set our target time
-        zuluTargetTime = new Date(Date.now() + (timeSet * 1000)).toISOString();
+        // Instead of sending an ending time (in case computers aren't synched) we send a start/end time and let the receiver calculate the difference
+        // If we sent just the duration, it gets a little harder to tell when an updates happens. Ie; I originally have a 60 sec timer. 30 seconds go, and I send another 60 sec to reset it.
+        // Because the numbers match, it won't get update.d
+        // We get around this by sending unique time codes, but we only care about the difference. But it allows us to tell if it's a new timer or not easily.
+        zuluStartTime = new Date(Date.now()).toISOString();
+        zuluEndTime = new Date(Date.now() + (timeSet * 1000)).toISOString();
 
         // Send to OBR to sync player timers
         let TimeBomb: ITimeBomb = {
-            zuluTargetTime: zuluTargetTime,
+            startTime: zuluStartTime,
+            endTime: zuluEndTime,
             start: true,
             reset: false,
             visible: visible

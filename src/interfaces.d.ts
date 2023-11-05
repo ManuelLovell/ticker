@@ -1,6 +1,7 @@
 export interface ITimeBomb
 {
-    zuluTargetTime?: string;
+    startTime?: string;
+    endTime?: string;
     start?: boolean;
     reset?: boolean;
     visible?: boolean;
