@@ -1,15 +1,15 @@
 {
     "name": "Ticker!",
-    "description": "A simple timer configured by the GM that is synchronized to player's in the room",
-    "version": "1.1",
+    "description": "A simple timer configured by the GM that is synchronized to players in the room",
+    "version": "2.0",
     "author": "Battle-System",
     "icon": "/logo.png",
     "manifest_version": 1,
     "action": {
-      "title": "Ticker!",
-      "icon": "/icon.svg",
-      "popover": "/",
-      "height": 200,
-      "width": 300
+        "title": "Ticker!",
+        "icon": "/icon.svg",
+        "popover": "/",
+        "height": 240,
+        "width": 180
     }
-  }
+}
