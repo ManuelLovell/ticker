@@ -1,5 +1,3 @@
-import { Theme } from "@owlbear-rodeo/sdk";
-
 export function GetGUID(): string
 {
     let d = new Date().getTime();
@@ -12,10 +10,9 @@ export function GetGUID(): string
     return guid;
 }
 
-export function SetThemeMode(theme: Theme, document: Document): void
+export function SetThemeMode(theme: string, document: Document): void
 {
     const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-    console.log(darkThemeMq.matches);
     
     const darkTheme = darkThemeMq.matches ? "dark" : "light";
     const lightTheme = darkThemeMq.matches ? "light" : "dark";
@@ -28,7 +25,7 @@ export function SetThemeMode(theme: Theme, document: Document): void
 
             if (rule && rule.media && rule.media.mediaText.includes("prefers-color-scheme"))
             {
-                if (theme.mode == "LIGHT")
+                if (theme === "LIGHT")
                 {
                     rule.media.appendMedium(`(prefers-color-scheme: ${darkTheme})`);
 
@@ -37,7 +34,7 @@ export function SetThemeMode(theme: Theme, document: Document): void
                         rule.media.deleteMedium(`(prefers-color-scheme: ${lightTheme})`);
                     }
                 }
-                else if (theme.mode == "DARK")
+                else if (theme === "DARK")
                 {
                     rule.media.appendMedium(`(prefers-color-scheme: ${lightTheme})`);
 

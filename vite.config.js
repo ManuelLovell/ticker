@@ -7,6 +7,7 @@ export default {
         rollupOptions: {
             input: {
                 main: path.resolve(__dirname, 'index.html'),
+                whatsnew: path.resolve(__dirname, 'whatsnew/bswhatsnew.html'),
             }
         }
     },

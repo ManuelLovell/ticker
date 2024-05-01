@@ -5,4 +5,6 @@ export interface ITimeBomb
     start?: boolean;
     reset?: boolean;
     visible?: boolean;
+    ownerId?: string;
+    auxillary?: boolean;
 }

@@ -10,10 +10,6 @@
 
     color-scheme: inherit;
     color: var(--foreground-color);
-    border: var(--OBR-dark-blue-trans);
-    border-radius: 16px;
-    border-style: solid;
-    border-width: 2px;
 
     --background-color: #242424;
     --foreground-color: white;
@@ -26,6 +22,8 @@
     --OBR-dark-blue: rgb(30, 34, 49);
     --OBR-dark-blue-trans: rgba(30, 34, 49, 0.507);
     --OBR-light-blue: rgb(60, 62, 75);
+    --OBR-Purple-Select: rgb(187, 153, 255);
+    --OBR-Purple-Select-transparent: rgb(187, 153, 255, 0.5);
 
     --dice-color: #159cc5;
     --BS-red: #A73335;
@@ -57,181 +55,110 @@
     }
 }
 
-.material-symbols-outlined {
-    font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 60;
-    font-size: 12px;
-    position: relative;
-    top: 4px;
+table {
+    width: 100%;
 }
 
-.main {
-    margin: 0 auto;
-    width: 400px;
-    min-width: 25%;
-    max-width: 95%;
-    max-height: 100vh;
+#timerArea {
+    text-align: center;
+    font: 64px/80px Roboto, sans-serif;
 }
 
-.button,
-.oneThird,
-.oneFourth {
-    border-radius: 20px;
+.toggle-button {
+    color: var(--foreground-color);
+    background: var(--OBR-dark-blue-trans);
+    width: 100%;
+    border-color: var(--button-color);
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 6px;
     text-transform: uppercase;
     text-align: center;
     cursor: pointer;
 }
 
-.button,
-#timerArea:not(.disabled) {
-    font: 16px/32px Roboto;
-    color: var(--foreground-color);
-    width: 100%;
-    border: none;
-    display: block;
-}
-
-.button {
-    border-color: var(--button-color);
-    border-width: 1px;
-    border-style: solid;
-    margin-top: 2px;
-    background: var(--OBR-dark-blue-trans);
-}
-
-#timerArea:not(.disabled) {
-    font: 64px/80px Roboto, sans-serif;
-}
-
-.disabled {
-    font: 32px/80px Roboto, sans-serif;
-    height: 180px;
-    text-align: center;
+button:disabled {
+    background-color: var(--BS-red);
+    border: 1px solid darkgrey;
+    cursor: default !important;
 }
 
 .hidden {
     visibility: none;
 }
 
-.timerButtons,
-.threeButtons {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    padding-top: 1px;
-    gap: 10px;
-
-    font: 16px Roboto, sans-serif;
-    font-weight: 600;
-    color: var(--foreground-color);
+.time-button {
     width: 100%;
-}
-
-.oneThird {
-    padding: 5px 0;
-    margin: 1px;
-    flex-grow: 1;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
     color: var(--foreground-color);
     background: var(--OBR-light-blue);
     border-style: solid;
     border-color: grey;
     border-width: 1px;
+    border-radius: 6px;
 }
 
-.oneFourth {
-    padding: 5px 0;
-    margin: 1px;
-    flex-grow: 1;
-    color: var(--foreground-color);
-    background: var(--OBR-dark-blue);
-    border-style: solid;
-    border-color: grey;
-    border-width: 1px;
+.toggle-button {
+    padding: 2px 0 4px 0;
 }
 
-.button:hover {
-    background: var(--dice-color);
-}
-
-.oneThird:hover {
-    background: var(--OBR-dark-blue-trans);
-}
-
-.oneFourth:hover {
-    background: var(--OBR-dark-blue-trans);
-}
-
-.grey,
-.grey:hover {
-    background: #222;
+.toggle-button:not(:disabled):hover,
+.time-button:hover {
+    background: var(--OBR-Purple-Select-transparent);
 }
 
 /***/
-.glass {
-    margin-left: 10px;
-    height: 100%;
-    background-image: url('/public/hourglass.png');
-    background-repeat: no-repeat;
-    background-size: contain;
+#activeTimer {
+    width: 100%;
+    display: flex;
 }
 
 .get-hourglass {
-    position: absolute;
-    margin-top: 35px;
-    top: 30%;
-    left: 31%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+    height: 100%;
 }
 
-.container-glass {
-    position: relative;
-    height: 180px;
-    width: 250px;
+#activeTimer>div.get-hourglass>svg {
+    content: '';
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    outline: 2px solid var(--foreground-color);
+    /* Adjust thickness and color */
+    z-index: -1;
+    /* Move the outline behind the content */
+    border-radius: 6px;
 }
 
-.txt-center {
-    text-align: center;
-}
-.floatRight
-{
-    float:right;
-    text-align: right;
-    justify-content:right;
-}
 .timerNumbers {
-    float: right;
-    text-align: center;
-    top: 50%;
-    width: 50%;
-
     font: 42px Roboto, sans-serif;
+    text-align: center;
+    width: 100%;
+    margin-left: 6px;
     font-weight: bolder;
     line-height: 85vh;
 }
-.timerHidden
-{
-    float: right;
-    text-align: center;
-    top: 50%;
-    width: 100%;
 
+.timerHidden {
+    text-align: center;
+    text-wrap: pretty;
+    width: 100%;
+    font: 16px Roboto, sans-serif;
+    font-weight: bold;
+    line-height: 85vh;
+
+    animation: blinker 5s linear infinite;
+}
+
+.timerPaused {
+    text-align: center;
+    width: 100%;
     font: 24px Roboto, sans-serif;
     font-weight: bolder;
     line-height: 85vh;
-
     animation: blinker 3s linear infinite;
-}
-.timerPaused {
-    float: right;
-    text-align: center;
-    top: 50%;
-    width: 100%;
-
-    font: 48px Roboto, sans-serif;
-    font-weight: bolder;
-    line-height: 85vh;
-
-    animation: blinker 1s linear infinite;
 }
 
 @keyframes blinker {
@@ -239,21 +166,22 @@
         opacity: 0;
     }
 }
+
 /** Toggle Switch **/
-#topMost
-{
+#topMost {
     display: flex;
 }
-#slideToggle
-{
+
+#slideToggle {
     line-height: 35px;
 }
+
 .toggle {
     cursor: pointer;
     display: inline-block;
-  }
-  
-  .toggle-switch {
+}
+
+.toggle-switch {
     display: inline-block;
     background: #ccc;
     border-radius: 16px;
@@ -262,11 +190,14 @@
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-  }
-  .toggle-switch:before, .toggle-switch:after {
+}
+
+.toggle-switch:before,
+.toggle-switch:after {
     content: "";
-  }
-  .toggle-switch:before {
+}
+
+.toggle-switch:before {
     display: block;
     background: linear-gradient(to bottom, #fff 0%, #eee 100%);
     border-radius: 50%;
@@ -277,25 +208,59 @@
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-  }
-  .toggle:hover .toggle-switch:before {
+}
+
+.toggle:hover .toggle-switch:before {
     background: linear-gradient(to bottom, #fff 0%, #fff 100%);
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
-  }
-  .toggle-checkbox:checked + .toggle-switch {
-    background: var(--dice-color);
-  }
-  .toggle-checkbox:checked + .toggle-switch:before {
+}
+
+.toggle-checkbox:checked+.toggle-switch {
+    background: var(--OBR-Purple-Select-transparent);
+}
+
+.toggle-checkbox:checked+.toggle-switch:before {
     left: 30px;
-  }
-  
-  .toggle-checkbox {
+}
+
+.toggle-checkbox {
     position: absolute;
     visibility: hidden;
-  }
-  
-  .toggle-label {
+}
+
+.toggle-label {
     margin-left: 5px;
     position: relative;
     top: 2px;
-  }
+}
+
+.svg {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 20px;
+    margin-top: 2px;
+}
+
+
+.imageIcon {
+    width: 20px;
+    height: 20px;
+    margin-left: 6px;
+}
+
+.clickable {
+    filter: var(--invert);
+    background-color: transparent !important;
+    border-style: none !important;
+    vertical-align: text-bottom;
+    height: 20px;
+    width: 20px;
+    margin-right: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.whats-new-shine {
+    filter: invert(50%) sepia(44%) saturate(43) hue-rotate(-45deg) brightness(119%) contrast(80%);
+}
