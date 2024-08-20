@@ -7,6 +7,8 @@ const footer = document.querySelector<HTMLElement>('#bs-whatsnew-notes')!;
 
 whatsnew.innerHTML = `
   <div id="newsContainer">
+    <h1>Ticker! 8/19</h1>
+    Fixed a bug regarding synchronization on the player end. (Thank you @chris_stargazer for the report)
     <h1>Ticker! 5/1</h1>
     Annual clean-up and such. This one was a rush job for some people early on, and I just never came back cause.. it worked.
     </br> So cleaned things up a bit today. Wanted the footprint smaller, and less buttons.

@@ -185,6 +185,10 @@ class TickerTimer
                     TICKER.StartButton.disabled = true;
                     TICKER.PauseButton.disabled = false;
                     TICKER.ResetButton.disabled = true;
+
+                    // Clear old timeout
+                    if (!isNaN(TICKER.TimerInterval)) clearInterval(TICKER.TimerInterval);
+
                     TICKER.TimerInterval = setInterval(async function ()
                     {
                         TICKER.TimeSet--;
@@ -214,6 +218,10 @@ class TickerTimer
                         else if (TICKER.TimerArea.innerText === "Ding!")
                         {
                             await AlarmOBRBadge();
+
+                            // Clear old timeout
+                            if (!isNaN(TICKER.TimerInterval)) clearInterval(TICKER.TimerInterval);
+
                             setTimeout(() =>
                             {
                                 TICKER.ResetButton.click();
@@ -236,6 +244,9 @@ class TickerTimer
             // Reset Logic
             if (timeData.reset === true && timeData.start === false && TICKER.Started === false)
             {
+                // Clear old timeout
+                if (!isNaN(TICKER.TimerInterval)) clearInterval(TICKER.TimerInterval);
+
                 TICKER.TimerArea.innerText = "0:00";
                 TICKER.StartButton.disabled = false;
                 TICKER.PauseButton.disabled = true;
@@ -287,6 +298,10 @@ class TickerTimer
                 this.ActiveArea.innerHTML = CreateHourglass(durationSeconds + "s");
 
                 const timerArea = document.getElementById("timerNumbers")!;
+
+                // Clear old timeout
+                if (!isNaN(TICKER.TimerInterval)) clearInterval(TICKER.TimerInterval);
+
                 //Set Timer Numbers
                 TICKER.TimerInterval = setInterval(async function ()
                 {
@@ -323,6 +338,9 @@ class TickerTimer
                     }
                     else if (timerArea.innerText === "Ding!")
                     {
+
+                        // Clear old timeout
+                        if (!isNaN(TICKER.TimerInterval)) clearInterval(TICKER.TimerInterval);
                         await AlarmOBRBadge();
                     }
                     TICKER.UpdateNonVisibleMessage(durationSeconds > 0);
