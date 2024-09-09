@@ -46,7 +46,7 @@ export class Constants
                     </label>
                 </div>
             </td>
-            <td><div id="whatsNew"></div></td>
+            <td><div id="patreonContainer"></div></td>
         </tr>
     </table>`;
 

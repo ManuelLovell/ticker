@@ -5,7 +5,7 @@ import { ITimeBomb } from './interfaces';
 import { AlarmOBRBadge, ClearOBRBadge, SetTimerOBRBadge } from './tickerBadge';
 import { CreateHourglass } from './tickerHourglass';
 import { ConfigureMinuteSButton, ConfigurePauseButton, ConfigureResetButton, ConfigureStartButton, ConfigureTenSecondButton, ConfigureVisibleToggle, UpdateTimeDisplay } from './tickerButtons';
-import { CheckRegistration, GetWhatsNewButton } from './whatsnew/bsWhatsNewSetup';
+import { CheckRegistration, GetPatreonButton } from './patreonCheck/bsPatreon';
 import './style.css'
 
 class TickerTimer
@@ -111,9 +111,8 @@ class TickerTimer
         this.PauseButton = document.getElementById('pauseButton') as HTMLButtonElement;
         this.ResetButton = document.getElementById('resetButton') as HTMLButtonElement;
 
-        const whatsNewContainer = document.getElementById("whatsNew") as HTMLDivElement;
-        whatsNewContainer.appendChild(GetWhatsNewButton());
-        CheckRegistration();
+        const patreonContainer = document.getElementById("patreonContainer") as HTMLDivElement;
+        patreonContainer.appendChild(GetPatreonButton());
     }
 
     public FindPlayerElements()
@@ -125,6 +124,7 @@ class TickerTimer
     public async LoadGM()
     {
         Constants.APPELEMENT.innerHTML = Constants.GMINTERFACE;
+        await CheckRegistration();
         this.FindGMElements();
         await OBR.action.setHeight(240);
 

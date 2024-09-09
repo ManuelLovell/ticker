@@ -1,26 +1,21 @@
 import OBR from "@owlbear-rodeo/sdk";
-import { BSWhatsNewConstants } from "./bsWhatsNewConstants";
+import { BSWhatsNewConstants } from "./bsPatreonConstants";
 
 export let USER_REGISTERED = false;
-export function GetWhatsNewButton()
+
+export function GetPatreonButton()
 {
-    const EXTENSIONWHATSNEW = "com.battle-system.ticker-whatsnew";
     const newImgElement = document.createElement('img');
-    newImgElement.id = "whatsNewButton";
-    newImgElement.style.cursor = "pointer";
+    newImgElement.id = "PatreonButton";
     newImgElement.setAttribute('class', 'icon');
     newImgElement.classList.add('clickable');
-    newImgElement.setAttribute('title', 'Whats New?');
-    newImgElement.setAttribute('src', '/w-info.svg');
-    newImgElement.onclick = async function ()
+    newImgElement.setAttribute('title', USER_REGISTERED ? 'Thanks for subscribing!' : 'Get the news on updates on the Battle-System Patreon');
+    newImgElement.setAttribute('src', USER_REGISTERED ? 'w-thankyou.svg' : '/w-patreon-2.png');
+    newImgElement.onclick = async function (e)
     {
-        await OBR.modal.open({
-            id: EXTENSIONWHATSNEW,
-            url: `/src/whatsnew/bswhatsnew.html?subscriber=${USER_REGISTERED}`,
-            height: 500,
-            width: 350,
-        });
-    };
+        e.preventDefault();
+        window.open("https://www.patreon.com/battlesystem", "_blank");
+    }
 
     return newImgElement;
 }

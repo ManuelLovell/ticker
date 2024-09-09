@@ -249,6 +249,12 @@ button:disabled {
     margin-left: 6px;
 }
 
+#patreonContainer
+{
+    border: 1px solid var(--soft-outline);
+    border-radius: 6px;
+    text-align: center;
+}
 .clickable {
     filter: var(--invert);
     background-color: transparent !important;
@@ -256,8 +262,7 @@ button:disabled {
     vertical-align: text-bottom;
     height: 20px;
     width: 20px;
-    margin-right: 4px;
-    margin-left: 10px;
+    padding: 4px 0;
     cursor: pointer;
 }
 
